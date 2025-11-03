@@ -6,14 +6,20 @@ import io
 import pandas as pd
 
 # Default UCI Bank Marketing zip URL
-DATA_URL = "https://archive.ics.uci.edu/ml/machine-learning-databases/00222/bank-additional.zip"
-DATA_DIR = Path(__file__).resolve().parents[1] / "data"
+DATA_URL = (
+    "https://archive.ics.uci.edu/ml/"
+    "machine-learning-databases/00222/bank-additional.zip"
+)
+
+ROOT = Path(__file__).resolve().parents[1]
+DATA_DIR = ROOT / "data"
 DATA_PATH = DATA_DIR / "bank-additional" / "bank-additional-full.csv"
-OUT_DIR = Path(__file__).resolve().parents[1] / "outputs"
+OUT_DIR = ROOT / "outputs"
 
 
 def ensure_data() -> pd.DataFrame:
-    """Ensure dataset CSV exists locally; if not, download and extract from UCI.
+    """Ensure dataset CSV exists locally; if not,
+    download and extract from UCI.
 
     Returns
     -------

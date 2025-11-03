@@ -5,9 +5,7 @@ Approach (brief):
 - Impute numeric columns with median and categorical with mode.
 - Detect outliers using IQR and cap (winsorize) at 1.5*IQR fences.
 """
-from typing import Tuple
 import pandas as pd
-import numpy as np
 
 
 def _replace_unknowns(df: pd.DataFrame) -> pd.DataFrame:

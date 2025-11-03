@@ -3,17 +3,17 @@
 Functions save plots to disk under `out_dir/plots` and write a short
 textual EDA report to `out_dir/eda_report.txt`.
 """
-from typing import Optional, Union
+# typing imports removed: type information kept inline as comment in function
 from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import numpy as np
 import io
 
 
-def run_eda(df: pd.DataFrame, out_dir: Optional[Union[str, Path]] = None) -> None:
+def run_eda(df: pd.DataFrame, out_dir=None) -> None:
     # Normalize out_dir to a Path before using `/` operator
+    # type: (pd.DataFrame, Optional[Union[str, Path]]) -> None
     if out_dir is None:
         out_path = Path("outputs")
     else:
@@ -32,7 +32,8 @@ def run_eda(df: pd.DataFrame, out_dir: Optional[Union[str, Path]] = None) -> Non
     report_lines.append(buf.getvalue())
     report_lines.append("\nHead:\n" + df.head().to_string())
 
-    report_lines.append("\nSummary statistics:\n" + df.describe(include='all', datetime_is_numeric=True).to_string())
+    summary = df.describe(include="all", datetime_is_numeric=True).to_string()
+    report_lines.append("\nSummary statistics:\n" + summary)
 
     # Missingness overview (treat 'unknown' for object dtypes)
     obj_cols = df.select_dtypes(include=[object]).columns.tolist()
@@ -67,17 +68,27 @@ def run_eda(df: pd.DataFrame, out_dir: Optional[Union[str, Path]] = None) -> Non
     # Scatter: first two numeric
     if len(num_cols) >= 2:
         plt.figure(figsize=(6, 4))
-        sns.scatterplot(x=df[num_cols[0]], y=df[num_cols[1]], alpha=0.3)
+        sns.scatterplot(
+            x=df[num_cols[0]],
+            y=df[num_cols[1]],
+            alpha=0.3,
+        )
         plt.title(f"Scatter: {num_cols[0]} vs {num_cols[1]}")
-        plt.tight_layout()
-        plt.savefig(plots_dir / f"scatter_{num_cols[0]}_{num_cols[1]}.png")
-        plt.close()
+    plt.tight_layout()
+    out_name = f"scatter_{num_cols[0]}_{num_cols[1]}.png"
+    plt.savefig(plots_dir / out_name)
+    plt.close()
 
     # Correlation heatmap for numeric features
     if len(num_cols) >= 2:
         corr = df[num_cols].corr()
         plt.figure(figsize=(10, 8))
-        sns.heatmap(corr, annot=False, cmap='coolwarm', center=0)
+        sns.heatmap(
+            corr,
+            annot=False,
+            cmap='coolwarm',
+            center=0,
+        )
         plt.title("Correlation matrix (numeric features)")
         plt.tight_layout()
         plt.savefig(plots_dir / "corr_matrix.png")
@@ -92,7 +103,10 @@ def run_eda(df: pd.DataFrame, out_dir: Optional[Union[str, Path]] = None) -> Non
         for c in obj_cols:
             miss_mask[c] = miss_mask[c] | df[c].isin(['unknown'])
         plt.figure(figsize=(12, 6))
-        sns.heatmap(miss_mask.iloc[:500].T, cbar=False)  # show first 500 rows for legibility
+        sns.heatmap(
+            miss_mask.iloc[:500].T,
+            cbar=False,
+        )  # show first 500 rows for legibility
         plt.title("Missingness heatmap (first 500 rows)")
         plt.tight_layout()
         plt.savefig(plots_dir / "missingness_heatmap.png")
@@ -124,4 +138,9 @@ def run_eda(df: pd.DataFrame, out_dir: Optional[Union[str, Path]] = None) -> Non
     with open(report_path, "w") as f:
         f.write("\n".join(report_lines))
 
-    print(f"EDA complete — plots saved to {plots_dir} and report to {report_path}")
+    print(
+        "EDA complete — plots saved to",
+        plots_dir,
+        "and report to",
+        report_path,
+    )

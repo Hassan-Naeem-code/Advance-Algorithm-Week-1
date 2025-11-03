@@ -2,10 +2,10 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-import pandas as pd
-import numpy as np
+import pandas as pd  # noqa: E402
+import numpy as np  # noqa: E402
 
-from src.cleaning import clean_data
+from src.cleaning import clean_data  # noqa: E402
 
 
 def test_clean_data_imputes_and_caps():

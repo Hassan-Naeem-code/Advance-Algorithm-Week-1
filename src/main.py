@@ -17,8 +17,8 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from src.utils import ensure_data, DATA_PATH, OUT_DIR
-from src import eda, cleaning, features
+from src.utils import ensure_data, OUT_DIR  # noqa: E402
+from src import eda, cleaning, features  # noqa: E402
 
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
