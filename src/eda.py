@@ -13,7 +13,7 @@ import io
 
 def run_eda(df: pd.DataFrame, out_dir=None) -> None:
     # Normalize out_dir to a Path before using `/` operator
-    # type: (pd.DataFrame, Optional[Union[str, Path]]) -> None
+    # normalize out_dir type in code below
     if out_dir is None:
         out_path = Path("outputs")
     else:
